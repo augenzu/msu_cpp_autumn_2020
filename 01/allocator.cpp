@@ -15,7 +15,6 @@ Allocator::make_allocator(size_t max_size)
 {
     offset_ = 0;
     capacity_ = max_size;
-    allocator_is_created_ = true;
     
     if (allocator_is_created_) {
         delete[] mem_;
@@ -38,6 +37,8 @@ Allocator::make_allocator(size_t max_size)
         allocator_is_created_ = false;
         return;
     }
+    
+    allocator_is_created_ = true;
 }
 
 char *
