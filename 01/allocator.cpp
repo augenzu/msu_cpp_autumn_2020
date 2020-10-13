@@ -1,10 +1,3 @@
-// TODO: обернуть в умные указатели
-// TODO: конструкторы & оператор присваивания
-// TODO: double call of make_allocator - what will happen? (mem leak?!) - FIXED(?)
-// TODO: install valgrind - FIXED
-// TODO: check for leaks
-// TODO: если в make_allocator new[] возвращает nullptr - что делать?  - FIXED
-
 #include "allocator.h"
 
 Allocator::Allocator() = default;
