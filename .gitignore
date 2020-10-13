@@ -1,0 +1,10 @@
+# compiled object files
+*.o
+
+# temporary files
+*~
+
+# executable files
+*.out
+01/main
+01/test
