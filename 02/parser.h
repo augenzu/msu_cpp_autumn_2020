@@ -20,12 +20,12 @@ private:
     std::function<void(uint64_t)> number_token_callback{ [](uint64_t num)
             {
                 std::cout << "number_token_callback is called, " 
-                << "number is " << num << std::endl; 
+                << "got number " << num << std::endl; 
             } };
     std::function<void(const std::string &)> string_token_callback{ [](const std::string &str)
             {
                 std::cout << "str_token_callback is called, " 
-                << "string is " << str << std::endl; 
+                << "got string " << str << std::endl; 
             } };
 
 public:

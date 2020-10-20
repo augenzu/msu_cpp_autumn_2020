@@ -45,9 +45,11 @@ TokenParser::parse(const std::string &input)
                 ;
             } else if (isdigit(ch)) {
                 curr_num = ch - '0';
+                curr_str = "";
                 curr_str += ch;   // this may be not a number but just a beginning of a string
                 state = ST_NUMBER;
             } else {
+                curr_str = "";
                 curr_str += ch;
                 state = ST_STRING;
             }
