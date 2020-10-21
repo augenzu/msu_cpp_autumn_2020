@@ -7,7 +7,7 @@ all: main
 main: main_
 	./main
 
-test: main
+test: main_
 	./main
 
 main_: main.o test.o parser.o
