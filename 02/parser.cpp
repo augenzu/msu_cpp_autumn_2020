@@ -73,8 +73,6 @@ TokenParser::parse(const std::string &input)
             if (isspace(ch)) {
                 string_token_callback(curr_str);
                 state = ST_SPACE;
-            } else if (isdigit(ch)) {
-                curr_str += ch;
             } else {
                 curr_str += ch;
             }
