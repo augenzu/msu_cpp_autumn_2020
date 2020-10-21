@@ -2,13 +2,19 @@ CC=g++
 CFLAGS=-c -std=c++17
 LDFLAGS=-std=c++17
 
-all: test
+all: main
 
-test: test_
-	./test
+main: main_
+	./main
 
-test_: test.o parser.o
-	$(CC) $(LDFLAGS) test.o parser.o -o test
+test: main
+	./main
+
+main_: main.o test.o parser.o
+	$(CC) $(LDFLAGS) main.o test.o parser.o -o main
+
+main.o: main.cpp
+	$(CC) $(CFLAGS) main.cpp -o main.o
 
 test.o: test.cpp
 	$(CC) $(CFLAGS) test.cpp -o test.o
