@@ -21,7 +21,7 @@ private:
     operator[](size_t idx) const;
 
 public:
-    Matrix(size_t, size_t);
+    Matrix(size_t rows_ = 1, size_t cols_ = 1);
     Matrix(const Matrix &);
     ~Matrix();
     Matrix &
