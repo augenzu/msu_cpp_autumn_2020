@@ -22,4 +22,4 @@ public:
     operator[](size_t idx) const;
 };
 
-#endif ROW_H
+#endif

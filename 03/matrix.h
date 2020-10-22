@@ -36,8 +36,6 @@ public:
     operator==(const Matrix &) const;
     bool
     operator!=(const Matrix &) const;
-    int &
-    operator
 };
 
-#endif MATRIX_H
+#endif
