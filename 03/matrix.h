@@ -4,9 +4,9 @@
 #ifndef MARTRIX_H
 #define MATRIX_H
 
+#include "row.h"
 #include <algorithm>
 #include <iostream>
-#include "row.h"
 
 class Matrix
 {
