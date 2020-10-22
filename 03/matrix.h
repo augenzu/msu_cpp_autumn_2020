@@ -1,6 +1,3 @@
-// TODO: REMOVE ALL THE TODOS
-// TODO: smart pointers?
-
 #ifndef MARTRIX_H
 #define MATRIX_H
 
@@ -15,10 +12,6 @@ private:
     int **data_{};
     void
     swap(Matrix &);
-    Row &
-    operator[](size_t idx);
-    Row
-    operator[](size_t idx) const;
 
 public:
     Matrix(size_t rows_ = 1, size_t cols_ = 1);
@@ -36,6 +29,10 @@ public:
     operator==(const Matrix &) const;
     bool
     operator!=(const Matrix &) const;
+    // Row &
+    // operator[](size_t idx);
+    Row
+    operator[](size_t idx) const;
 };
 
 #endif
