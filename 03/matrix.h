@@ -31,6 +31,8 @@ public:
     columns() const;
     Matrix &
     operator*=(int);
+    Matrix
+    operator+(const Matrix &) const;
     bool
     operator==(const Matrix &) const;
     bool

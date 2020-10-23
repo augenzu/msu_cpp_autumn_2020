@@ -31,11 +31,15 @@ Matrix::Matrix(size_t rows_, size_t cols_) : rows_(rows_), cols_(cols_)
     assert(rows_ > 0 && cols_ > 0);
 
     data_ = new int *[rows_];
-    assert(data_ != nullptr);
+    if (data_ == nullptr) {
+        throw std::bad_alloc();
+    }
 
     for (size_t i = 0; i < rows_; ++i) {
         data_[i] = new int[cols_];
-        assert(data_[i] != nullptr);
+        if (data_[i] == nullptr) {
+            throw std::bad_alloc();
+        }
     }
 
     fill(0);
@@ -84,6 +88,20 @@ Matrix::operator*=(int mul)
         }
     }
     return *this;
+}
+
+Matrix
+Matrix::operator+(const Matrix &rhs) const
+{
+    assert(rows_ == rhs.rows_ && cols_ == rhs.cols_);
+
+    Matrix sum(rows_, cols_);
+    for (size_t i = 0; i < rows_; ++i) {
+        for (size_t j = 0; j < cols_; ++j) {
+            sum[i][j] = data_[i][j] + rhs.data_[i][j];
+        }
+    }
+    return sum;
 }
 
 bool
