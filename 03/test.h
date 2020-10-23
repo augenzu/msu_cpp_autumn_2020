@@ -46,17 +46,9 @@ self_assignment_test();
 void
 multiplication_by_number_test();
 void
+matrix_sum_test();
+void
 ostream_operator_test();
-/*----- the following 4 tests must fail if run them -----*/
-void
-create_matrix_with_zero_rows_test();
-void
-create_matrix_with_zero_cols_test();
-void
-create_matrix_with_inf_rows_test();
-void
-create_matrix_with_inf_cols_test();
-/*----------------------------------------------------------*/
 
 // perform testing
 void

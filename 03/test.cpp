@@ -176,6 +176,26 @@ multiplication_by_number_test()
 }
 
 void
+matrix_sum_test()
+{
+    Matrix m1(3, 4);
+    Matrix m2(3, 4);
+    fill_matrix_with_some_numbers(m1);
+    fill_matrix_with_some_numbers(m2);
+    m2 *= 2;
+
+    Matrix sum = m1 + m2;
+    Matrix sum_by_hand(3, 4);
+    for (size_t i = 0; i < m1.rows(); ++i) {
+        for (size_t j = 0; j < m1.columns(); ++j) {
+            sum_by_hand[i][j] = m1[i][j] + m2[i][j];
+        }
+    }
+
+    assert(sum == sum_by_hand);
+}
+
+void
 ostream_operator_test()
 {
     Matrix m(7, 4);
@@ -190,37 +210,9 @@ ostream_operator_test()
             ss >> read_m[i][j];
         }
     }
-    
+
     assert(read_m == m);
 }
-
-/*----- the following 4 tests must fail if run them -----*/
-
-void
-create_matrix_with_zero_rows_test()
-{
-    Matrix m(0, 1);
-}
-
-void
-create_matrix_with_zero_cols_test()
-{
-    Matrix m(1,0);
-}
-
-void
-create_matrix_with_inf_rows_test()
-{
-    Matrix m(-1, 1);
-}
-
-void
-create_matrix_with_inf_cols_test()
-{
-    Matrix m(1, -1);
-}
-
-/*----------------------------------------------------------*/
 
 const std::vector<std::function<void()>> tests{
     simple_create_test,
@@ -239,7 +231,8 @@ const std::vector<std::function<void()>> tests{
     multiple_assignment_test,
     self_assignment_test,
     multiplication_by_number_test,
-    ostream_operator_test    
+    ostream_operator_test,
+    matrix_sum_test  
 };
 
 void
