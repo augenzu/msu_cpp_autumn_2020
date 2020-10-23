@@ -118,3 +118,15 @@ Matrix::operator[](size_t idx) const
     Row row{cols_, data_[idx]};
     return row;
 }
+
+std::ostream &
+operator<<(std::ostream &out, const Matrix &m)
+{
+    for (size_t i = 0; i < m.rows(); ++i) {
+        for (size_t j = 0; j < m.columns(); ++j) {
+            out << m[i][j] << " ";
+        }
+        out << std::endl;
+    }
+    return out;
+}

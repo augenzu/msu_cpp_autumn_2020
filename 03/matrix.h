@@ -39,4 +39,7 @@ public:
     operator[](size_t idx) const;
 };
 
+std::ostream &
+operator <<(std::ostream &, const Matrix &);
+
 #endif
