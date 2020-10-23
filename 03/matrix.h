@@ -3,7 +3,9 @@
 
 #include "row.h"
 #include <algorithm>
+#include <cassert>
 #include <iostream>
+#include <stdexcept>
 
 class Matrix
 {
@@ -12,6 +14,10 @@ private:
     int **data_{};
     void
     swap(Matrix &);
+    void
+    fill(int filler);
+    void
+    fill(const Matrix &);
 
 public:
     Matrix(size_t rows_ = 1, size_t cols_ = 1);
@@ -29,8 +35,6 @@ public:
     operator==(const Matrix &) const;
     bool
     operator!=(const Matrix &) const;
-    // Row &
-    // operator[](size_t idx);
     Row
     operator[](size_t idx) const;
 };

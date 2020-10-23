@@ -2,7 +2,7 @@
 #define ROW_H
 
 #include <iostream>
-#include <cassert>
+#include <stdexcept>
 
 class Row
 {
@@ -11,7 +11,7 @@ private:
     int *row_{};
 
 public:
-    Row(size_t, int *&);
+    Row(size_t, int *);
     ~Row() = default;
     Row(const Row &) = default;
     Row &
