@@ -175,6 +175,25 @@ multiplication_by_number_test()
     assert((m *= 10) == multed_by_hand);
 }
 
+void
+ostream_operator_test()
+{
+    Matrix m(7, 4);
+    fill_matrix_with_some_numbers(m);
+
+    std::stringstream ss;
+    ss << m;
+
+    Matrix read_m(7, 4);
+    for (size_t i = 0; i < m.rows(); ++i) {
+        for (size_t j = 0; j < m.columns(); ++j) {
+            ss >> read_m[i][j];
+        }
+    }
+    
+    assert(read_m == m);
+}
+
 /*----- the following 4 tests must fail if run them -----*/
 
 void
@@ -219,7 +238,8 @@ const std::vector<std::function<void()>> tests{
     assignment_operator_test,
     multiple_assignment_test,
     self_assignment_test,
-    multiplication_by_number_test    
+    multiplication_by_number_test,
+    ostream_operator_test    
 };
 
 void

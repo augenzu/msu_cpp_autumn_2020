@@ -4,6 +4,7 @@
 #include "matrix.h"
 #include <cassert>
 #include <functional>
+#include <sstream>
 #include <vector>
 
 extern const std::vector<std::function<void()>> tests;
@@ -44,6 +45,8 @@ void
 self_assignment_test();
 void
 multiplication_by_number_test();
+void
+ostream_operator_test();
 /*----- the following 4 tests must fail if run them -----*/
 void
 create_matrix_with_zero_rows_test();
