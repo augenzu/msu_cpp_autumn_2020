@@ -20,7 +20,7 @@ private:
     fill(const Matrix &);
 
 public:
-    Matrix(size_t rows_ = 1, size_t cols_ = 1);
+    explicit Matrix(size_t rows_ = 1, size_t cols_ = 1);
     Matrix(const Matrix &);
     ~Matrix();
     Matrix &
