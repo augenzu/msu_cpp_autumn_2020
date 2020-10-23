@@ -21,7 +21,7 @@ simple_create_test()
 void
 right_const_indexing_test()
 {
-    Matrix m(2, 3);
+    const Matrix m(2, 3);
     int i = m[0][0];
     assert(i == m[0][0]);
 }
@@ -37,7 +37,7 @@ right_assign_indexing_test()
 void
 wrong_const_indexing_test()
 {
-    Matrix m(2, 3);
+    const Matrix m(2, 3);
     try {
         int i = m[2][0];
     } catch (const std::out_of_range &except) {
