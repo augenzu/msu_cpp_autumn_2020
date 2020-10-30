@@ -10,4 +10,4 @@
 */test
 
 # .vscode settings
-*.vscode/*
+**/.vscode/
