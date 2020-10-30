@@ -40,13 +40,36 @@ Bigint::Bigint(const std::string &str)
     uint64_t base = 1;
     int start_idx = is_negative;
 
-    for (int i = str.size() - 1; i >= start_idx; --i) {
-        digits[digit_pos] += (str[i] - '0') * base;
+    for (int i = 0; i < str.size() - start_idx; ++i) {
+        int str_idx = str.size() - 1 - i;
+        digits[digit_pos] += (str[str_idx] - '0') * base;
         base *= 10;
         if (i % DIGIT_LEN == DIGIT_LEN - 1) {
             ++digit_pos;
             base = 1;
         }
+    }
+
+    // removing significant zeros 
+    int new_digits_cnt = digits_cnt;
+    while (new_digits_cnt > 0 && !digits[new_digits_cnt - 1]) {
+        --new_digits_cnt;
+    }
+    if (!new_digits_cnt) {
+        new_digits_cnt = 1;
+    }
+    if (new_digits_cnt < digits_cnt) {
+        uint64_t *new_digits = new uint64_t[new_digits_cnt];
+        for (int i = 0; i < new_digits_cnt; ++i) {
+            new_digits[i] = digits[i];
+        }
+        digits_cnt = new_digits_cnt;
+        delete[] digits;
+        digits = new_digits;
+    }
+
+    if (digits_cnt == 1 && digits[0] == 0) {
+        is_negative = false;
     }
 }
 
@@ -132,7 +155,7 @@ Bigint::operator std::string() const
 bool
 Bigint::operator==(const Bigint &rhs) const
 {
-    if (digits_cnt != rhs.digits_cnt) {
+    if (is_negative != rhs.is_negative || digits_cnt != rhs.digits_cnt) {
         return false;
     }
     for (int i = 0; i < digits_cnt; ++i) {
@@ -152,21 +175,24 @@ Bigint::operator!=(const Bigint &rhs) const
 bool
 Bigint::operator<(const Bigint &rhs) const
 {
+    if (is_negative != rhs.is_negative) {
+        return is_negative;
+    }
     if (digits_cnt < rhs.digits_cnt) {
-        return true;
+        return true ^ is_negative;
     }
     if (digits_cnt > rhs.digits_cnt) {
-        return false;
+        return false ^ is_negative;
     }
     for (int i = digits_cnt - 1; i >= 0; --i) {
         if (digits[i] < rhs.digits[i]) {
-            return true;
+            return true ^ is_negative;
         }
         if (digits[i] > rhs.digits[i]) {
-            return false;
+            return false ^ is_negative;
         }
     }
-    return false;
+    return false ^ is_negative;
 }
     
 bool
