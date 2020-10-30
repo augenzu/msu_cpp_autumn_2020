@@ -53,7 +53,12 @@ equal_compare_test()
 void
 less_comapare_test()
 {
-    ;
+    Bigint b1{"123123123123123123"}, b2{"456456456456456456"};
+    assert(b1 < b2);
+    Bigint b3{"999"}, b4{"111111111111111"};
+    assert(b3 < b4);
+    Bigint b5{"-11111111"}, b6{"111"};
+    assert(b5 < b6);
 }
 
 void
