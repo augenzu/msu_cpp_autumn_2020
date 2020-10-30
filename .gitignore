@@ -8,3 +8,6 @@
 *.out
 */main
 */test
+
+# .vscode settings
+*.vscode/*
