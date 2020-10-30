@@ -28,18 +28,9 @@ Matrix::fill(const Matrix &rhs)
 
 Matrix::Matrix(size_t rows_, size_t cols_) : rows_(rows_), cols_(cols_)
 {
-    assert(rows_ > 0 && cols_ > 0);
-
     data_ = new int *[rows_];
-    if (data_ == nullptr) {
-        throw std::bad_alloc();
-    }
-
     for (size_t i = 0; i < rows_; ++i) {
         data_[i] = new int[cols_];
-        if (data_[i] == nullptr) {
-            throw std::bad_alloc();
-        }
     }
 
     fill(0);
