@@ -14,6 +14,10 @@ simple_create_test();
 void
 ostream_operator_test();
 void
+equal_compare_test();
+void
+less_compare_test();
+void
 copy_constructor_test();
 void
 move_constructor_test();
