@@ -78,6 +78,51 @@ move_constructor_test()
     assert(move_b == copy_b);
 }
 
+void
+assignment_operator_test()
+{
+    Bigint b1, b2{ "4321432143214321432143214321432143214321" };
+    b1 = b2;
+    assert(b1 == b2);
+    b2 = { 42 };
+    assert(b1 != b2);
+}
+
+void
+multiple_assignment_test()
+{
+    Bigint b1, b2, b3{ "4321432143214321432143214321432143214321" };
+    b1 = b2 = b3;
+    assert(b1 == b3);
+}
+
+void
+self_assignment_test()
+{
+    Bigint b{ "4321432143214321432143214321432143214321" };
+    Bigint copy_b{ b };
+    b = b;
+    assert(b == copy_b);
+}
+
+void
+move_test()
+{
+    Bigint b{ "4321432143214321432143214321432143214321" };
+    Bigint copy_b{ b }, move_b;
+    move_b = std::move(b);
+    assert(move_b == copy_b);
+}
+
+void
+self_move_test()
+{
+    Bigint b{ "4321432143214321432143214321432143214321" };
+    Bigint copy_b{ b };
+    b = std::move(b);
+    assert(b == copy_b);
+}
+
 
 const std::vector<std::function<void()>> tests{
     simple_create_test,
@@ -85,7 +130,12 @@ const std::vector<std::function<void()>> tests{
     equal_compare_test,
     less_comapare_test,
     copy_constructor_test,
-    move_constructor_test
+    move_constructor_test,
+    assignment_operator_test,
+    multiple_assignment_test,
+    self_assignment_test,
+    move_test,
+    self_move_test
 };
 
 
