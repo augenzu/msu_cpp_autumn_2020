@@ -203,8 +203,52 @@ Bigint::operator+=(const Bigint &rhs)
 }
 
 Bigint &
-Bigint::operator-=(const Bigint &)
-{
+Bigint::operator-=(const Bigint &rhs)
+{    
+    if (is_negative != rhs.is_negative) {
+        return *this += -rhs;
+    }
+
+    const Bigint *reduced{ &*this }, *subtracted{ &rhs };
+    if ((is_negative && *this > rhs)
+            || (!is_negative &&  *this < rhs)) {
+        reduced = &rhs;
+        subtracted = &*this;
+    }
+
+    Bigint diff;
+    diff.is_negative = reduced->is_negative;
+    if (reduced == &rhs) {
+        diff.is_negative ^= true;
+    }
+    diff.digits_cnt = reduced->digits_cnt;
+    delete[] diff.digits;
+    diff.digits = new uint64_t[diff.digits_cnt];
+
+    uint64_t debt = 0;
+    
+    for (int i = 0; i < subtracted->digits_cnt; ++i) {
+        if (reduced->digits[i] < debt + subtracted->digits[i]) {
+            diff.digits[i] = RADIX + reduced->digits[i] - debt - subtracted->digits[i];
+            debt = 1;
+        } else {
+            diff.digits[i] = reduced->digits[i] - debt - subtracted->digits[i];
+            debt = 0;
+        }
+    }
+    for (int i = subtracted->digits_cnt; i < reduced->digits_cnt; ++i) {
+        if (reduced->digits[i] < debt) {
+            diff.digits[i] = RADIX + reduced->digits[i] - debt;
+            debt = 1;
+        } else {
+            diff.digits[i] = reduced->digits[i] - debt;
+            debt = 0;
+        }
+    }
+
+    diff.remove_significant_zeros();
+    swap(diff);
+    
     return *this;
 }
 
