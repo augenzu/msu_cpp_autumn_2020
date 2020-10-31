@@ -157,7 +157,7 @@ Bigint
 Bigint::operator-() const
 {
     Bigint neg{ *this };
-    neg.is_negative ^= false;
+    neg.is_negative ^= true;
     return neg;
 }
 
@@ -348,4 +348,26 @@ operator<<(std::ostream &out, const Bigint &bigint)
 {
     out << static_cast<std::string>(bigint);
     return out;
+}
+
+
+Bigint
+operator+(const Bigint &lhs, const Bigint &rhs)
+{
+    Bigint copy_lhs{ lhs };
+    return copy_lhs += rhs;
+}
+
+Bigint
+operator-(const Bigint &lhs, const Bigint &rhs)
+{
+    Bigint copy_lhs{ lhs };
+    return copy_lhs -= rhs;
+}
+
+Bigint
+operator*(const Bigint &lhs, const Bigint &rhs)
+{
+    Bigint copy_lhs{ lhs };
+    return copy_lhs *= rhs;
 }

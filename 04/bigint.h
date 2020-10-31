@@ -12,8 +12,8 @@ private:
     static const uint64_t RADIX;
 
     bool is_negative{ false };
-    size_t digits_cnt{};  // number of digits
-    uint64_t *digits{ nullptr };  // store digits of number in reversed order (LE)
+    size_t digits_cnt{};           // count of digits
+    uint64_t *digits{ nullptr };   // store digits of number in reversed order (LE)
 
     void
     swap(Bigint &);
