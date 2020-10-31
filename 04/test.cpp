@@ -36,47 +36,56 @@ ostream_operator_test()
 void
 equal_compare_test()
 {
-    Bigint b1{"42"}, b2{"42"};
+    Bigint b1{ "42" }, b2{ "42" };
     assert(b1 == b2);
-    Bigint b3{"98936913561937591991369175"}, b4{"-98936913561937591991369175"};
+    Bigint b3{ "98936913561937591991369175" }, b4{ "-98936913561937591991369175" };
     assert(b3 != b4);
-    Bigint b5{"111111111111111111"}, b6{"111111"};
+    Bigint b5{ "111111111111111111" }, b6{ "111111" };
     assert(b5 != b6);
-    Bigint b7{"0"}, b8{"-0"};
+    Bigint b7{ "0" }, b8{ "-0" };
     assert(b7 == b8);
-    Bigint b9{"000000000000000000000000000000000000000000000000000000000000000000001"}, b10{"1"};
+    Bigint b9{ "000000000000000000000000000000000000000000000000000000000000000000001" }, b10{ "1" };
     assert(b9 == b10);
-    Bigint b11{"0123456789123456789"}, b12{"123456789123456789"};
+    Bigint b11{ "0123456789123456789" }, b12{ "123456789123456789" };
     assert(b11 == b12);
 }
 
 void
 less_comapare_test()
 {
-    Bigint b1{"123123123123123123"}, b2{"456456456456456456"};
+    Bigint b1{ "123123123123123123" }, b2{ "456456456456456456" };
     assert(b1 < b2);
-    Bigint b3{"999"}, b4{"111111111111111"};
+    Bigint b3{ "999" }, b4{ "111111111111111" };
     assert(b3 < b4);
-    Bigint b5{"-11111111"}, b6{"111"};
+    Bigint b5{ "-11111111" }, b6{ "111" };
     assert(b5 < b6);
 }
 
 void
 copy_constructor_test()
 {
-    Bigint b1{ "4321432143214321432143214321432143214321"};
-    Bigint b2{ b1 };
-    assert (b1 == b2);
+    Bigint b{ "4321432143214321432143214321432143214321" };
+    Bigint copy_b{ b };
+    assert (copy_b == b);
 }
+
 void
-move_constructor_test();
+move_constructor_test()
+{
+    Bigint b{ "4321432143214321432143214321432143214321" };
+    Bigint copy_b{ b };
+    Bigint move_b{ std::move(b) };
+    assert(move_b == copy_b);
+}
 
 
 const std::vector<std::function<void()>> tests{
     simple_create_test,
     ostream_operator_test,
     equal_compare_test,
-    less_comapare_test
+    less_comapare_test,
+    copy_constructor_test,
+    move_constructor_test
 };
 
 
