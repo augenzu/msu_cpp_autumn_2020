@@ -17,6 +17,9 @@ private:
     size_t digits_cnt{};  // number of digits
     uint64_t *digits{ nullptr };  // we store digits of number in reversed order
 
+    void
+    swap(Bigint &);
+
 public:
     Bigint();
     Bigint(int64_t);

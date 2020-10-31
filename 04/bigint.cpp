@@ -3,6 +3,17 @@
 const size_t Bigint::DIGIT_LEN = 18;
 const uint64_t Bigint::RADIX = 1000000000000000000U;  // 10 ** 18
 
+
+void
+Bigint::swap(Bigint &rhs)
+{
+    // std::swap<Bigint>(*this, rhs);
+    std::swap(is_negative, rhs.is_negative);
+    std::swap(digits_cnt, rhs.digits_cnt);
+    std::swap(digits, rhs.digits);
+}
+
+
 Bigint::Bigint() : 
 is_negative(false), digits_cnt(1), digits(new uint64_t[1])
 {
@@ -94,6 +105,22 @@ Bigint::~Bigint()
 {
     delete[] digits;
     digits = nullptr;
+}
+
+
+Bigint &
+Bigint::operator=(const Bigint &rhs)
+{
+    Bigint copy_rhs{ rhs };
+    swap(copy_rhs);
+    return *this;
+}
+    
+Bigint &
+Bigint::operator=(Bigint &&rhs)
+{
+    swap(rhs);
+    return *this;
 }
 
 
