@@ -195,6 +195,24 @@ mul_assign_test()
     assert(b6 == Bigint{ 38262 });
 }
 
+void
+arithmetic_operations_test()
+{
+    Bigint b1{ 42 };
+    Bigint b2{ "1234567891234567891234567891234" };
+    Bigint b3{ -1 };
+    Bigint b4{ "-8800555353588005553535" };
+
+    Bigint a1 = (3 + -b1) * (b2 - b4);
+    assert(a1 == Bigint{ "-48148148101369806548080364345991" });
+
+    Bigint a2 = b3 * (4 * -b2 - b3 * 911 * b4 * b2 * b2 - b1);
+    assert(a2 == Bigint{ "12219639989694128084259972901838976150575553419742554188727203414663259459617226146038" });
+
+    Bigint a3 = (1 - b1) * (2 - b2) - (3 - b3) * (4 - b4);
+    assert(a3 == Bigint{ "50617283505415062126265261326356" });
+}
+
 
 const std::vector<std::function<void()>> tests{
     simple_create_test,
@@ -210,7 +228,8 @@ const std::vector<std::function<void()>> tests{
     self_move_test,
     unsigned_add_assign_test,
     unsigned_sub_assign_test,
-    mul_assign_test
+    mul_assign_test,
+    arithmetic_operations_test
 };
 
 
