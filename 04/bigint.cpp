@@ -1,7 +1,7 @@
 #include "bigint.h"
 
-const size_t Bigint::DIGIT_LEN = 18;
-const uint64_t Bigint::RADIX = 1000000000000000000U;  // 10 ** 18
+const size_t Bigint::DIGIT_LEN = 9;
+const uint64_t Bigint::RADIX = 1000000000U;  // 10 ** 9
 
 
 void
@@ -135,7 +135,15 @@ Bigint::operator std::string() const
     if (is_negative) {
         ss << '-';
     }
-    for (int i = digits_cnt - 1; i >= 0; --i) {
+
+    ss << digits[digits_cnt - 1];
+    for (int i = digits_cnt - 2; i >= 0; --i) {
+        std::stringstream aux;
+        aux << digits[i];
+        size_t extra_zeros = DIGIT_LEN - aux.str().size();
+        for (int i = 0; i < extra_zeros; ++i) {
+            ss << 0;
+        }
         ss << digits[i];
     }
 
@@ -157,7 +165,7 @@ Bigint &
 Bigint::operator+=(const Bigint &rhs)
 {
     if (is_negative != rhs.is_negative) {
-        ; // ?????
+        return *this -= -rhs;
     }
     
     Bigint sum;
@@ -189,47 +197,44 @@ Bigint::operator+=(const Bigint &rhs)
     sum.digits[sum.digits_cnt - 1] = carry;
 
     sum.remove_significant_zeros();
-
     swap(sum);
+
     return *this;
 }
 
+Bigint &
+Bigint::operator-=(const Bigint &)
+{
+    return *this;
+}
 
-// Bigint &
-// Bigint::operator+=(const Bigint &rhs)
-// {
-//     // assume *this & rhs have the same signs
+Bigint &
+Bigint::operator*=(const Bigint &rhs)
+{
+    Bigint prod;
+    prod.is_negative = is_negative ^ rhs.is_negative;
+    prod.digits_cnt = digits_cnt + rhs.digits_cnt;
+    delete[] prod.digits;
+    prod.digits = new uint64_t[prod.digits_cnt];
+    for (int i = 0; i < prod.digits_cnt; ++i) {
+        prod.digits[i] = 0;
+    }
 
-//     uint32_t carry = 0;
+    for (int i = 0; i < digits_cnt; ++i) {
+        uint64_t carry = 0;
+        for (int j = 0; j < rhs.digits_cnt; ++j) {
+            uint64_t prod_item = digits[i] * rhs.digits[j] + prod.digits[i + j] + carry;
+            prod.digits[i + j] = prod_item % RADIX;
+            carry = prod_item / RADIX;
+        }
+        prod.digits[i + rhs.digits_cnt] += carry;
+    }
 
-//     for (size_t i = 0; i < std::min(digits_cnt, rhs.digits_cnt); ++i) {
-//         uint64_t sum = digits[i] + rhs.digits[i] + carry;
-//         digits[i] += sum % RADIX;
-//         carry = sum / RADIX;
-//     }
-
-//     if (digits_cnt > rhs.digits_cnt) {
-//         digits[rhs.digits_cnt] += carry;
-//     } else {
-//         uint32_t new_digits
-//     }
-
-
-
-
-
-
-
-//     if (carry) {
-//         if (digits_cnt > rhs.digits_cnt) {
-//             digits[rhs.digits_cnt] += carry;
-//         } else {
-
-//         }
-//     }
-
-//     return *this;
-// }
+    prod.remove_significant_zeros();
+    swap(prod);
+    
+    return *this;
+}
 
 
 bool
