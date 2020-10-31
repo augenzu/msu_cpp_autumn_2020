@@ -41,10 +41,10 @@ is_negative(false), digits_cnt(1), digits(new uint64_t[1])
 }
 
 Bigint::Bigint(int64_t val)
-{
+{   
     is_negative = val < 0;
 
-    uint64_t abs_val = abs(val);
+    uint64_t abs_val = llabs(val);
     if (abs_val / RADIX) {
         digits_cnt = 2;
         digits = new uint64_t[digits_cnt];
@@ -143,6 +143,55 @@ Bigint::operator std::string() const
     ss >> str;
 
     return str;
+}
+
+Bigint
+Bigint::operator-() const
+{
+    Bigint neg{ *this };
+    neg.is_negative ^= false;
+    return neg;
+}
+
+Bigint &
+Bigint::operator+=(const Bigint &rhs)
+{
+    if (is_negative != rhs.is_negative) {
+        ; // ?????
+    }
+    
+    Bigint sum;
+    sum.is_negative = is_negative;
+    sum.digits_cnt = std::max(digits_cnt, rhs.digits_cnt) + 1;
+    delete[] sum.digits;
+    sum.digits = new uint64_t[sum.digits_cnt];
+
+    uint64_t carry = 0;
+
+    for (int i = 0; i < std::min(digits_cnt, rhs.digits_cnt); ++i) {
+        sum.digits[i] = digits[i] + rhs.digits[i] + carry;
+        carry = sum.digits[i] / RADIX;
+        sum.digits[i] %= RADIX;
+    }
+    if (digits_cnt < rhs.digits_cnt) {
+        for (int i = digits_cnt; i < rhs.digits_cnt; ++i) {
+            sum.digits[i] = rhs.digits[i] + carry;
+            carry = sum.digits[i] / RADIX;
+            sum.digits[i] %= RADIX;
+        }
+    } else {
+        for (int i = rhs.digits_cnt; i < digits_cnt; ++i) {
+            sum.digits[i] = digits[i] + carry;
+            carry = sum.digits[i] / RADIX;
+            sum.digits[i] %= RADIX;
+        }
+    }
+    sum.digits[sum.digits_cnt - 1] = carry;
+
+    sum.remove_significant_zeros();
+
+    swap(sum);
+    return *this;
 }
 
 
