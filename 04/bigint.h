@@ -8,14 +8,12 @@
 class Bigint
 {
 private:
-    // digit base is 10, not 16!
-    // little-endian
-    static const size_t DIGIT_LEN;  // in 10x digits
+    static const size_t DIGIT_LEN;
     static const uint64_t RADIX;
 
     bool is_negative{ false };
     size_t digits_cnt{};  // number of digits
-    uint64_t *digits{ nullptr };  // we store digits of number in reversed order
+    uint64_t *digits{ nullptr };  // store digits of number in reversed order (LE)
 
     void
     swap(Bigint &);
@@ -38,14 +36,14 @@ public:
 
     operator std::string() const;
 
+    Bigint
+    operator-() const;
     Bigint &
     operator+=(const Bigint &);
     Bigint &
     operator-=(const Bigint &);
     Bigint &
     operator*=(const Bigint &);
-    Bigint
-    operator-() const;
 
     bool
     operator==(const Bigint &) const;
