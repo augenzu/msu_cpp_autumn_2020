@@ -19,6 +19,8 @@ private:
 
     void
     swap(Bigint &);
+    void
+    remove_significant_zeros();
 
 public:
     Bigint();

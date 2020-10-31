@@ -7,10 +7,30 @@ const uint64_t Bigint::RADIX = 1000000000000000000U;  // 10 ** 18
 void
 Bigint::swap(Bigint &rhs)
 {
-    // std::swap<Bigint>(*this, rhs);
     std::swap(is_negative, rhs.is_negative);
     std::swap(digits_cnt, rhs.digits_cnt);
     std::swap(digits, rhs.digits);
+}
+
+void
+Bigint::remove_significant_zeros()
+{
+    int new_digits_cnt = digits_cnt;
+    while (new_digits_cnt > 0 && !digits[new_digits_cnt - 1]) {
+        --new_digits_cnt;
+    }
+    if (!new_digits_cnt) {
+        new_digits_cnt = 1;
+    }
+    if (new_digits_cnt < digits_cnt) {
+        uint64_t *new_digits = new uint64_t[new_digits_cnt];
+        for (int i = 0; i < new_digits_cnt; ++i) {
+            new_digits[i] = digits[i];
+        }
+        digits_cnt = new_digits_cnt;
+        delete[] digits;
+        digits = new_digits;
+    }
 }
 
 
@@ -61,23 +81,7 @@ Bigint::Bigint(const std::string &str)
         }
     }
 
-    // removing significant zeros 
-    int new_digits_cnt = digits_cnt;
-    while (new_digits_cnt > 0 && !digits[new_digits_cnt - 1]) {
-        --new_digits_cnt;
-    }
-    if (!new_digits_cnt) {
-        new_digits_cnt = 1;
-    }
-    if (new_digits_cnt < digits_cnt) {
-        uint64_t *new_digits = new uint64_t[new_digits_cnt];
-        for (int i = 0; i < new_digits_cnt; ++i) {
-            new_digits[i] = digits[i];
-        }
-        digits_cnt = new_digits_cnt;
-        delete[] digits;
-        digits = new_digits;
-    }
+    remove_significant_zeros();
 
     if (digits_cnt == 1 && digits[0] == 0) {
         is_negative = false;
