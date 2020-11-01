@@ -4,6 +4,17 @@ const size_t Bigint::DIGIT_LEN = 9;
 const uint64_t Bigint::RADIX = 1000000000U;  // 10 ** 9
 
 
+Bigint::Bigint(bool is_negative, size_t digits_cnt, bool zero)
+: is_negative(is_negative), digits_cnt(digits_cnt), digits(new uint64_t[digits_cnt])
+{
+    if (zero) {
+        for (int i = 0; i < digits_cnt; ++i) {
+            digits[i] = 0;
+        }
+    }
+}
+
+
 void
 Bigint::swap(Bigint &rhs)
 {
@@ -88,8 +99,8 @@ Bigint::Bigint(const std::string &str)
     }
 }
 
-Bigint::Bigint(const Bigint &rhs) : 
-is_negative(rhs.is_negative), digits_cnt(rhs.digits_cnt), 
+Bigint::Bigint(const Bigint &rhs) 
+: is_negative(rhs.is_negative), digits_cnt(rhs.digits_cnt), 
         digits(new uint64_t[rhs.digits_cnt])
 {
     for (int i = 0; i < rhs.digits_cnt; ++i) {
@@ -168,11 +179,7 @@ Bigint::operator+=(const Bigint &rhs)
         return *this -= -rhs;
     }
     
-    Bigint sum;
-    sum.is_negative = is_negative;
-    sum.digits_cnt = std::max(digits_cnt, rhs.digits_cnt) + 1;
-    delete[] sum.digits;
-    sum.digits = new uint64_t[sum.digits_cnt];
+    Bigint sum(is_negative, std::max(digits_cnt, rhs.digits_cnt) + 1);
 
     uint64_t carry = 0;
 
@@ -216,14 +223,12 @@ Bigint::operator-=(const Bigint &rhs)
         subtracted = &*this;
     }
 
-    Bigint diff;
-    diff.is_negative = reduced->is_negative;
+    Bigint diff(reduced->is_negative, reduced->digits_cnt);
+    // If we swap the reduced and the subtracted 
+    // the sign of the difference changes to the opposite
     if (reduced == &rhs) {
         diff.is_negative ^= true;
     }
-    diff.digits_cnt = reduced->digits_cnt;
-    delete[] diff.digits;
-    diff.digits = new uint64_t[diff.digits_cnt];
 
     uint64_t debt = 0;
     
@@ -255,14 +260,7 @@ Bigint::operator-=(const Bigint &rhs)
 Bigint &
 Bigint::operator*=(const Bigint &rhs)
 {
-    Bigint prod;
-    prod.is_negative = is_negative ^ rhs.is_negative;
-    prod.digits_cnt = digits_cnt + rhs.digits_cnt;
-    delete[] prod.digits;
-    prod.digits = new uint64_t[prod.digits_cnt];
-    for (int i = 0; i < prod.digits_cnt; ++i) {
-        prod.digits[i] = 0;
-    }
+    Bigint prod(is_negative ^ rhs.is_negative, digits_cnt + rhs.digits_cnt, true);
 
     for (int i = 0; i < digits_cnt; ++i) {
         uint64_t carry = 0;
