@@ -10,8 +10,8 @@ main: main_
 test: main_
 	./main
 
-main_: main.o test.o format.o
-	$(CC) $(LDFLAGS) main.o test.o format.o -o main
+main_: main.o test.o
+	$(CC) $(LDFLAGS) main.o test.o -o main
 
 main.o: main.cpp
 	$(CC) $(CFLAGS) main.cpp -o main.o
