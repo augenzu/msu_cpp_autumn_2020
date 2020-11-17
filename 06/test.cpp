@@ -10,8 +10,8 @@
 void
 valid_format_test()
 {
-    auto text = format("{1}+{1} = {0}", 2, "one");
-    assert(text == "one+one = 2");
+    auto text = format("{1} + {2} != {0}", 3.001, "one", 2);
+    assert(text == "one + 2 != 3.001");
 }
 
 void
@@ -123,6 +123,13 @@ negative_index_test()
 }
 
 void
+only_args_in_format_string_test()
+{
+    auto text = format("{3}{0}{1}{2}", "@", "#", "$", "%");
+    assert(text == "%@#$");
+}
+
+void
 too_few_args_test()
 {
     try {
@@ -146,7 +153,8 @@ const std::vector<std::function<void()>> tests{
     not_a_number_index_test,
     too_big_index_test,
     negative_index_test,
-    too_few_args_test
+    too_few_args_test,
+    only_args_in_format_string_test
 };
 
 void
