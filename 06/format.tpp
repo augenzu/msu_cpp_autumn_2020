@@ -1,6 +1,8 @@
 #include "format-error.hpp"
 #include "to-strings.hpp"
+#include <cctype>
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -8,20 +10,37 @@
 size_t
 str_idx_to_num_idx(const std::string &str)
 {
-    size_t num = std::stoul(str);
-
-    std::stringstream check_stream;
-    check_stream << str;
-
-    size_t check_num = -1;
-    check_stream >> check_num;
-    std::string rest;
-    check_stream >> rest;
-
-    if (rest != "") {
+    auto it = str.begin();
+    // skip space symbols
+    for (; it != str.end() && isspace(*it); ++it) {
+    }
+    // index contains only space symbols
+    if (it == str.end()) {
+        throw FormatError("Argument index is empty.");
+    }
+    if (*it == '-') {
+        throw FormatError("Argument index is negative.");
+    }
+    ++it;
+    for (; it != str.end() && !isspace(*it); ++it) {
+        if (!isdigit(*it)) {
+            throw FormatError("Argument index is not a number.");
+        }
+    }
+    // check whether the rest of index contains only space symbols
+    for (; it != str.end() && isspace(*it); ++it) {
+    }
+    if (it != str.end()) {
         throw FormatError("Argument index is not a number.");
     }
+    
+    std::string max_str_idx = std::to_string(std::numeric_limits<size_t>::max());
+    if (str.size() > max_str_idx.size()
+            || (str.size() == max_str_idx.size() && str > max_str_idx)) {
+        throw FormatError("Argument index is too big.");
+    }
 
+    size_t num = std::stoul(str);
     return num;
 }
 

@@ -72,9 +72,19 @@ void
 empty_index_test()
 {
     try {
-        auto text = format("text with nothing {} in brace");
-    } catch (const std::invalid_argument &ia) {
-        assert(ia.what() == std::string("stoul"));
+        auto text = format("text with empty {} in brace");
+    } catch (const FormatError &fe) {
+        assert(fe.what() == std::string("Argument index is empty."));
+    }
+}
+
+void
+only_spaces_index_test()
+{
+    try {
+        auto text = format("text with only spaces {     } in brace");
+    } catch (const FormatError &fe) {
+        assert(fe.what() == std::string("Argument index is empty."));
     }
 }
 
@@ -94,9 +104,8 @@ not_a_number_index_test()
 {
     try {
         auto text = format("text with { not-a-number } in brace", "arg");
-        std::cout << "text: " << text << std::endl;
-    } catch (const std::invalid_argument &ia) {
-        assert(ia.what() == std::string("stoul"));
+    } catch (const FormatError &fe) {
+        assert(fe.what() == std::string("Argument index is not a number."));
     }
 }
 
@@ -104,10 +113,10 @@ void
 too_big_index_test()
 {
     try {
-        auto text = format("text with { 67644547686585858 } in brace", "arg");
+        auto text = format("text with { 6764454768658585928579879898768768768767876878 } in brace", "arg");
         std::cout << "text: " << text << std::endl;
     } catch (const FormatError &fe) {
-        assert(fe.what() == std::string("Argument index should be less than number of arguments."));
+        assert(fe.what() == std::string("Argument index is too big."));
     }
 }
 
@@ -118,7 +127,7 @@ negative_index_test()
         auto text = format("text with { -1 } in brace", "arg");
         std::cout << "text: " << text << std::endl;
     } catch (const FormatError &fe) {
-        assert(fe.what() == std::string("Argument index should be less than number of arguments."));
+        assert(fe.what() == std::string("Argument index is negative."));
     }
 }
 
@@ -149,6 +158,7 @@ const std::vector<std::function<void()>> tests{
     straight_open_brace_test,
     straight_close_brace_test,
     empty_index_test,
+    only_spaces_index_test,
     spoiled_index_test,
     not_a_number_index_test,
     too_big_index_test,
