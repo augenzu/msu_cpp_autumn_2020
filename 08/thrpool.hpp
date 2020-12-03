@@ -29,7 +29,7 @@ private:
 
             {
                 std::unique_lock lock{mtx_};
-                condvar_.wait(lock, [this]
+                condvar_.wait(lock, [this]()
                 { 
                     return end_flag_ || !tasks_.empty(); 
                 });
@@ -68,7 +68,7 @@ ThreadPool::exec(Func func, Args ...args) -> std::future<decltype(func(args...))
         if (end_flag_) {
             throw std::runtime_error("Adding task while task queue is destroing.");
         }
-        tasks_.emplace([task]
+        tasks_.emplace([task]()
         {
             (*task)(); 
         });

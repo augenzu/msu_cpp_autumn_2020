@@ -1,10 +1,13 @@
 #include "thrpool.hpp"
+#include <cassert>
 
 ThreadPool::ThreadPool(size_t pool_sz)
 : pool_sz_(pool_sz), end_flag_{false}
 {        
+    assert(pool_sz_ > 0);
+    
     for (size_t i = 0; i < pool_sz_; ++i) {
-        thrs_.emplace_back([this] 
+        thrs_.emplace_back([this]()
         {
             executor(); 
         });
