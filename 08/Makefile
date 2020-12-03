@@ -19,7 +19,7 @@ main.o: main.cpp
 test.o: test.cpp
 	$(CC) $(CFLAGS) test.cpp -o test.o
 
-thrpool.o: thrpool.cpp thrpool.tpp thrpool.hpp
+thrpool.o: thrpool.cpp thrpool.hpp
 	$(CC) $(CFLAGS) thrpool.cpp -o thrpool.o
 
 clean:
