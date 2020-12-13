@@ -1,15 +1,22 @@
 #include "test.hpp"
 #include <iostream>
 #include <sstream>
+#include <tuple>
+
+#include "serializer.hpp"
+#include "deserializer.hpp"
+#include <cassert>
+#include <functional>
+#include <vector>
 
 void
 simple_create_test()
 {
-    Serializer s{std::cout};
-    Deserializer d{std::cin};
+    Serializer s{ std::cout };
+    Deserializer d{ std::cin };
 }
 
-struct Data
+struct RightData
 {
     uint64_t a;
     bool b;
@@ -31,24 +38,72 @@ struct Data
 void
 right_data_test()
 {
-    Data x{ 1, true, 2 };
+    RightData input{ 1, true, 2 };
 
     std::stringstream stream;
 
     Serializer serializer(stream);
-    serializer.save(x);
+    Error err = serializer.save(input);
 
-    Data y{ 0, false, 0 };
+    // std::cout << "err: " 
+    //         << (err == Error::CorruptedArchive ? "Error::CorruptedArchive" : "Error::NoError")
+    //         << std::endl;
+
+    // std::cout << "stream.str(): " << "|" << stream.str() << "|" << std::endl;
+
+    RightData output{ 0, false, 0 };
 
     Deserializer deserializer(stream);
-    const Error err = deserializer.load(y);
+    err = deserializer.load(output);
 
     assert(err == Error::NoError);
+    
+    // std::cout << "err: " 
+    //         << (err == Error::CorruptedArchive ? "Error::CorruptedArchive" : "Error::NoError")
+    //         << std::endl;
 
-    assert(x.a == y.a);
-    assert(x.b == y.b);
-    assert(x.c == y.c);
+    assert(input.a == output.a);
+    assert(input.b == output.b);
+    assert(input.c == output.c);
 }
+
+struct WrongData
+{
+    std::string str;
+
+    template<class Serializer> Error 
+    serialize(Serializer &serializer) const
+    {
+        return serializer(str);
+    }
+
+    template<class Deserializer> Error 
+    deserialize(Deserializer &deserializer)
+    {
+        return deserializer(str);
+    }
+};
+
+
+// This test SHOULD fail so it is never run.
+// It is only here to show what happens if we pass something 
+// except of uint64_t or bool parameters to Serializer or Deserializer
+
+// void
+// wrong_data_test()
+// {
+//     WrongData input{ "input-data" };
+
+//     std::stringstream stream;
+
+//     Serializer serializer(stream);
+//     serializer.save(input);
+
+//     WrongData output{ "output-data" };
+
+//     Deserializer deserializer(stream);
+//     const Error err = deserializer.load(output);
+// }
 
 const std::vector<std::function<void()>> tests{
     simple_create_test,
