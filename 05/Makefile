@@ -10,20 +10,14 @@ main: main_
 test: main_
 	./main
 
-main_: main.o test.o serializer.o deserializer.o
-	$(CC) $(LDFLAGS) main.o test.o serializer.o deserializer.o -o main
+main_: main.o test.o
+	$(CC) $(LDFLAGS) main.o test.o -o main
 
-main.o: main.cpp
+main.o: main.cpp serializer.hpp serializer.tpp deserializer.hpp deserializer.tpp
 	$(CC) $(CFLAGS) main.cpp -o main.o
 
-test.o: test.cpp
+test.o: test.cpp serializer.hpp serializer.tpp deserializer.hpp deserializer.tpp
 	$(CC) $(CFLAGS) test.cpp -o test.o
-
-serializer.o: serializer.cpp
-	$(CC) $(CFLAGS) serializer.cpp -o serializer.o
-
-deserializer.o: deserializer.cpp
-	$(CC) $(CFLAGS) deserializer.cpp -o deserializer.o
 
 clean:
 	rm -f main test *.o
