@@ -8,24 +8,21 @@
 class Deserializer
 {
 private:
-    static constexpr char _sep{' '};
-    std::istream &_in/*{std::cin}*/;
+    static constexpr char _sep{ ' ' };
+    std::istream &_in{ std::cin };
 
-    template<class T> Error 
-    process(T &);
-    // template<> Error 
-    // process<bool>(bool &);
-    // template<> Error 
-    // process<uint64_t>(uint64_t &);
     template<class T, class ...Args> Error 
     process(T &, Args &...);
-    // template<class ...Args> Error 
-    // process(Args &...);
+    template<class ...Args> Error 
+    process();
 
 public:
     Deserializer(const Deserializer &) = delete;
     Deserializer(Deserializer &&) = delete;
-    explicit Deserializer(std::istream & = std::cin);
+    Deserializer(std::istream &in = std::cin)
+    : _in(in)
+    {
+    }
     Deserializer &
     operator=(const Deserializer &) = delete;
     Deserializer &

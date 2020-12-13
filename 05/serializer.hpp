@@ -8,24 +8,21 @@
 class Serializer
 {
 private:
-    static constexpr char _sep{' '};
-    std::ostream &_out/*{std::cout}*/;
+    static constexpr char _sep{ ' ' };
+    std::ostream &_out{ std::cout };
 
-    template<class T> Error 
-    process(T);
-    // template<> Error 
-    // process<bool>(bool);
-    // template<> Error 
-    // process<uint64_t>(uint64_t);
     template<class T, class ...Args> Error 
     process(T, Args...);
-    // template<class ...Args> Error 
-    // process(Args...);
+    template<class ...Args> Error 
+    process();
 
 public:
     Serializer(const Serializer &) = delete;
     Serializer(Serializer &&) = delete;
-    explicit Serializer(std::ostream & = std::cout);
+    explicit Serializer(std::ostream &out = std::cout) 
+    : _out(out)
+    {
+    }
     Serializer &
     operator=(const Serializer &) = delete;
     Serializer &
