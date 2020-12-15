@@ -50,6 +50,15 @@ push_back_test()
 }
 
 void
+push_back_to_empty()
+{
+    Vector<int> v;
+    v.push_back(0);
+    assert(v.size() == 1);
+    assert(v[0] == 0);
+}
+
+void
 pop_back_test()
 {
     Vector<std::string> v{"one", "two", "three"};
@@ -70,13 +79,95 @@ clear_empty_test()
     assert(v.capacity() != 0);
 }
 
+void
+begin_end_test()
+{
+    Vector<int> v{0, 1, 2, 3, 4, 5, 6, 7};
+    int i = 0;
+    for (auto it = v.begin(); it != v.end(); ++it) {
+        assert(*it == i++);
+    }
+}
+
+void
+begin_end_empty_test()
+{
+    Vector<int> v;
+    int i = 0;
+    for (auto it = v.begin(); it != v.end(); ++it) {
+        assert(0 == 1);
+    }
+}
+
+void
+rbegin_rend_test()
+{
+    Vector<int> v{0, 1, 2, 3, 4, 5, 6, 7};
+    int i = 7;
+    for (auto it = v.rbegin(); it != v.rend(); ++it) {
+        assert(*it == i--);
+    }
+}
+
+void
+reserve_test()
+{
+    Vector<double> v = Vector<double>(11);
+
+    v.reserve(0);
+    assert(v.capacity() == 11);
+    assert(v.size() == 11);
+
+    v.reserve(111);
+    assert(v.capacity() == 111);
+    assert(v.size() == 11);
+    for (auto it = v.begin(); it != v.end(); ++it) {
+        assert(*it == 0.0);
+    }
+}
+
+void
+reserve_empty_test()
+{
+    Vector<int> v;
+    v.reserve(16);
+    assert(v.capacity() == 16);
+    v.push_back(42);
+    assert(v.size() == 1);
+    assert(v[0] == 42);
+}
+
+void
+resize_test()
+{
+    Vector<int> v{0, 1, 2, 3, 4, 5, 6, 7};
+
+    v.resize(11);
+    assert(v.size() == 11);
+    v[8] = 8;
+    v[9] = 9;
+    for (size_t i = 0; i < 9; ++i) {
+        assert(v[i] == i);
+    }
+
+    v.resize(4);
+    assert(v.size() == 4);
+}
+
 const std::vector<std::function<void()>> tests{
     simple_create_test,
     const_indexing_test,
     assign_indexing_test,
     push_back_test,
+    push_back_to_empty,
     pop_back_test,
-    clear_empty_test
+    clear_empty_test,
+    begin_end_test,
+    begin_end_empty_test,
+    rbegin_rend_test,
+    reserve_test,
+    reserve_empty_test,
+    resize_test
 };
 
 void
