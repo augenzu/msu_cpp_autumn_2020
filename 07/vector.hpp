@@ -1,18 +1,19 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
+#include "allocator.hpp"
 #include <cassert>
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
 
-template<class T, class Allocator = std::allocator<T>>
+template<class T, class Allocator = Allocator<T>>
 class Vector
 {
 public:
     using value_type = T;
     using iterator = T *;
-    using reverse_iterator = T*;
+    using reverse_iterator = std::reverse_iterator<iterator>;
 
 private:
     Allocator alloc_{};
@@ -23,7 +24,7 @@ private:
 public:
     Vector();
     explicit Vector(size_t);
-    Vector(size_t, const value_type & = value_type{});
+    Vector(size_t, const value_type &);
     Vector(std::initializer_list<value_type>);
     ~Vector();
 
@@ -51,6 +52,10 @@ public:
     reverse_iterator
     rend() noexcept;
 
+    template<class ...Args>
+    value_type &
+    emplace_back(Args ...args);
+
     void 
     resize(size_t, const value_type & = value_type{});
     void 
@@ -66,6 +71,9 @@ template<class T, class Allocator>
 Vector<T, Allocator>::Vector(size_t sz)
 : alloc_{}, data_{alloc_.allocate(sz)}, capacity_{sz}, size_{sz}
 {
+    for (size_t i = 0; i < sz; ++i) {
+        data_[i] = value_type{};
+    }
 }
 
 template<class T, class Allocator>
@@ -73,7 +81,6 @@ Vector<T, Allocator>::Vector(size_t sz, const value_type &value)
 : alloc_{}, data_{alloc_.allocate(sz)}, capacity_{sz}, size_{sz}
 {
     for (size_t i = 0; i < sz; ++i) {
-        // data_[i]{value};
         data_[i] = value;
     }
 }
@@ -85,7 +92,6 @@ Vector<T, Allocator>::Vector(std::initializer_list<value_type> init)
 {
     auto it = init.begin();
     for (size_t i = 0; i < init.size(); ++i) {
-        // data_[i]{*it++};
         data_[i] = *it++;
     }
 }
@@ -120,10 +126,12 @@ void
 Vector<T, Allocator>::push_back(const T &value)
 {
     if (size_ == capacity_) {
-        reserve(capacity_ << 1);
+        reserve(capacity_ ? capacity_ << 1 : 1);
+        if (capacity_ == 0) {
+            capacity_ = 1;
+        }
         capacity_ <<= 1;
     }
-    // data_[size_++]{value};
     data_[size_++] = value;
 }
 
@@ -185,6 +193,28 @@ Vector<T, Allocator>::rend() noexcept
 {
     return std::make_reverse_iterator(begin());
 }
+
+
+
+template<class T, class Allocator>
+template<class ...Args>
+typename Vector<T, Allocator>::value_type &
+Vector<T, Allocator>::emplace_back(Args ...args)
+{
+    if (size_ == capacity_) {
+        reserve(capacity_ ? capacity_ << 1 : 1);
+        if (capacity_ == 0) {
+            capacity_ = 1;
+        }
+        capacity_ <<= 1;
+    }
+    value_type *ptr = data_[size_ + 1];
+    value_type *new_obj = new (ptr) value_type(std::forward<Args>(args)...);
+    ++size_;
+    return *new_obj;
+}
+
+
 
 template<class T, class Allocator>
 void
