@@ -9,7 +9,9 @@
 void
 simple_create_test()
 {
-    Vector<int> v;
+    Vector<int> vi;
+    Vector<std::string> vs{ 3, "str" };
+    Vector<double> vd{ 0.1, 0.2, 0.3, 0.4 };
 }
 
 void
@@ -154,6 +156,52 @@ resize_test()
     assert(v.size() == 4);
 }
 
+void
+emplace_back_pod_test()
+{
+    Vector<int> v{0, 1, 2, 3, 4, 5, 6, 7};
+
+    int &new_elm = v.emplace_back(42);
+
+    assert(new_elm == 42);
+    assert(v.size() == 9);
+    assert(v[8] == 42);
+
+    new_elm = 100500;
+    assert(v[8] == 100500);
+}
+
+void
+emplace_back_non_pod_test()
+{
+    Vector<std::vector<std::string>> v{ { "1", "2" }, { "3" } };
+
+    assert(v.size() == 2);
+
+    std::vector<std::string> &new_elm = v.emplace_back(std::vector<std::string>{ "4", "5", "6", "7" });
+
+    assert(new_elm == (std::vector<std::string>{ "4", "5", "6", "7" }));
+    assert(v.size() == 3);
+    assert(v[2] == (std::vector<std::string>{ "4", "5", "6", "7" }));
+
+    new_elm[2] = "42";
+
+    assert(new_elm == (std::vector<std::string>{ "4", "5", "42", "7" }));
+    assert(v[2] == (std::vector<std::string>{ "4", "5", "42", "7" }));
+}
+
+void
+emplace_back_to_empty()
+{
+    Vector<double> v;
+
+    auto new_elm = v.emplace_back(3.14);
+
+    assert(new_elm == 3.14);
+    assert(v.size() == 1);
+    assert(v[0] == 3.14);
+}
+
 const std::vector<std::function<void()>> tests{
     simple_create_test,
     const_indexing_test,
@@ -167,7 +215,10 @@ const std::vector<std::function<void()>> tests{
     rbegin_rend_test,
     reserve_test,
     reserve_empty_test,
-    resize_test
+    resize_test,
+    emplace_back_pod_test,
+    emplace_back_non_pod_test,
+    emplace_back_to_empty
 };
 
 void
