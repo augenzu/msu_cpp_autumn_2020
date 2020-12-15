@@ -13,10 +13,10 @@ test: main_
 main_: main.o test.o
 	$(CC) $(LDFLAGS) main.o test.o -o main
 
-main.o: main.cpp
+main.o: main.cpp allocator.hpp vector.hpp vector.tpp
 	$(CC) $(CFLAGS) main.cpp -o main.o
 
-test.o: test.cpp
+test.o: test.cpp allocator.hpp vector.hpp vector.tpp
 	$(CC) $(CFLAGS) test.cpp -o test.o
 
 clean:
