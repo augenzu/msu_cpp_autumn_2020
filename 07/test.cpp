@@ -114,7 +114,7 @@ rbegin_rend_test()
 void
 reserve_test()
 {
-    Vector<double> v = Vector<double>(11);
+    Vector<double> v = Vector<double>(11, 3.14);
 
     v.reserve(0);
     assert(v.capacity() == 11);
@@ -124,7 +124,7 @@ reserve_test()
     assert(v.capacity() == 111);
     assert(v.size() == 11);
     for (auto it = v.begin(); it != v.end(); ++it) {
-        assert(*it == 0.0);
+        assert(*it == 3.14);
     }
 }
 
