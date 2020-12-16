@@ -34,6 +34,8 @@ public:
     void
     push_back(const value_type &);
     void
+    push_back(value_type &&);
+    void
     pop_back() noexcept;
     bool
     empty() const noexcept;
@@ -53,7 +55,7 @@ public:
 
     template<class ...Args>
     value_type &
-    emplace_back(Args ...args);
+    emplace_back(Args &&...args);
 
     void 
     resize(size_t, const value_type & = value_type{});

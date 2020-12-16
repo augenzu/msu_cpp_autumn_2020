@@ -7,6 +7,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
+#include <utility>
 
 template<class T, class Allocator>
 Vector<T, Allocator>::Vector() = default;
@@ -77,6 +78,16 @@ Vector<T, Allocator>::push_back(const T &value)
 
 template<class T, class Allocator>
 void
+Vector<T, Allocator>::push_back(T &&value)
+{
+    if (size_ == capacity_) {
+        reserve(capacity_ ? capacity_ << 1 : 1);
+    }
+    alloc_.construct(&data_[size_++], std::move(value));
+}
+
+template<class T, class Allocator>
+void
 Vector<T, Allocator>::pop_back() noexcept
 {
     if (size_ == 0) {
@@ -140,7 +151,7 @@ Vector<T, Allocator>::rend() noexcept
 template<class T, class Allocator>
 template<class ...Args>
 typename Vector<T, Allocator>::value_type &
-Vector<T, Allocator>::emplace_back(Args ...args)
+Vector<T, Allocator>::emplace_back(Args &&...args)
 {
     if (size_ == capacity_) {
         reserve(capacity_ ? capacity_ << 1 : 1);
@@ -179,7 +190,7 @@ Vector<T, Allocator>::reserve(size_t new_cap)
     }
     auto new_data = alloc_.allocate(new_cap);
     for (size_t i = 0; i < size_; ++i) {
-        alloc_.construct(&new_data[i], data_[i]);
+        alloc_.construct(&new_data[i], std::move(data_[i]));
     }
     for (size_t i = 0; i < size_; ++i) {
         alloc_.destroy(&data_[i]);
